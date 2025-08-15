@@ -4,6 +4,12 @@ import { fetchTasks } from '../redux/taskSlice';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
+// ============= CHART IMPORTS START =============
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
+// ============= CHART IMPORTS END =============
+
 const MyTasks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +23,21 @@ const MyTasks = () => {
   const myTasks = tasks.filter(
     t => t.createdBy?.toString() === user?._id || t.assignedTo?.toString() === user?._id
   );
+
+  // ============= CHART DATA PREPARATION START =============
+  const statusCounts = myTasks.reduce((acc, task) => {
+    acc[task.status] = (acc[task.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const chartData = {
+    labels: Object.keys(statusCounts),
+    datasets: [{
+      data: Object.values(statusCounts),
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+    }]
+  };
+  // ============= CHART DATA PREPARATION END =============
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this task?')) return;
@@ -39,6 +60,14 @@ const MyTasks = () => {
           + Add New Task
         </button>
       </div>
+
+      {/* ============= CHART RENDERING START ============= */}
+      {myTasks.length > 0 && (
+        <div className="mb-6" style={{ width: '300px', height: '300px' }}>
+          <Pie data={chartData} />
+        </div>
+      )}
+      {/* ============= CHART RENDERING END ============= */}
 
       {loading ? (
         <p className="text-gray-600">Loading tasks...</p>
