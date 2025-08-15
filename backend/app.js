@@ -18,7 +18,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 // ✅ Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // ✅ your frontend URL
+  origin: 'https://to-do-list-frontend-k5fg.onrender.com', // ✅ your frontend URL
   credentials: true // if using cookies or authorization headers
 }));
 app.use(express.json());
