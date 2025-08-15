@@ -29,5 +29,4 @@ A full-stack task management application where users can create, assign, view, u
 
 ---
 
-## URL
-task-manager-frontend-dqli.onrender.com
+
